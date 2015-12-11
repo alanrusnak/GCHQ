@@ -18,7 +18,7 @@ public class Line implements Comparable<Line>{
 		return calculatePossibilities(0,0);
 	}
 	
-	public int calculatePossibilities(int blocksUsed, int squaresUsed){
+	private int calculatePossibilities(int blocksUsed, int squaresUsed){
 		if(blocks.length-blocksUsed==0) return calculateForZero(blocksUsed,squaresUsed);
 		if(blocks.length-blocksUsed==1) return calculateForOne(blocksUsed,squaresUsed);
 		
