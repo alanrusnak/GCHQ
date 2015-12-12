@@ -18,9 +18,8 @@ public class Line implements Comparable<Line>{
 		return calculatePossibilities(0,0);
 	}
 	
-	private int calculatePossibilities(int blocksUsed, int squaresUsed){
-		if(blocks.length-blocksUsed==0) return calculateForZero(blocksUsed,squaresUsed);
-		if(blocks.length-blocksUsed==1) return calculateForOne(blocksUsed,squaresUsed);
+	private int calculatePossibilities(int blocksUsed, int squaresUsed){		
+		if(blocks.length-blocksUsed==0) return calculateForZero(blocksUsed,squaresUsed);		
 		
 		int ifBlockUsed = 0;
 		int ifBlockNotUsed = 0;
@@ -28,7 +27,10 @@ public class Line implements Comparable<Line>{
 		if(blockCanBeUsedHere(blocks[blocksUsed], squares, squaresUsed)){
 			ifBlockUsed = calculatePossibilities(blocksUsed+1, squaresUsed+blocks[blocksUsed]+1);			
 		}
-		ifBlockNotUsed = calculatePossibilities(blocksUsed,squaresUsed+1);
+		if(squaresUsed<squares.length){
+			ifBlockNotUsed = calculatePossibilities(blocksUsed,squaresUsed+1);
+		}
+		
 		
 		return ifBlockUsed + ifBlockNotUsed;
 		
@@ -36,15 +38,16 @@ public class Line implements Comparable<Line>{
 	
 	
 
-	private int calculateForOne(int blocksUsed, int squaresUsed) {
-		if(blockCanBeUsedHere(blocks[blocksUsed], squares, squaresUsed)) return 1;
-		return 0;
-	}
-
-	private int calculateForZero(int blocksUsed, int squaresUsed) {
-		if(squares.length>=squaresUsed)	return 1;
-		return 0;
-	}
+	private int calculateForZero(int blocksUsed, int squaresUsed) {	
+		if(squaresUsed<squares.length){
+			for(int i =squaresUsed;i<squares.length;i++){
+				if(squares[i]==Square.BLACK) return 0;
+			}
+			return 1;
+			}
+		return 1;
+	}		
+	
 
 	
 	private boolean isNoSquaresLeft(Square[] squares,int squaresUsed){
@@ -65,7 +68,7 @@ public class Line implements Comparable<Line>{
 	
 	private boolean blockCanBeUsedHere(int blockLength, Square[] squares, int squaresUsed) {
 		if(possibleSquaresLeft(squares,squaresUsed)<blockLength) return false;
-		if(squares[squaresUsed+blockLength]==Square.BLACK) return false;
+		if(squaresUsed+blockLength+1<squares.length && squares[squaresUsed+blockLength+1]==Square.BLACK) return false;
 		for(int i = squaresUsed;i<squaresUsed+blockLength-1;i++){
 			if(squares[i]==Square.WHITE) return false;
 		}
