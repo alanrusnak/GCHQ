@@ -49,6 +49,12 @@ public class SolverTests {
 		assertEquals(0, (new Line(0,new int[]{2}, new Square[]{Square.UNDECIDED,Square.WHITE,Square.UNDECIDED})).calculatePossibilities());
 		assertEquals(2, (new Line(0,new int[]{2}, new Square[]{Square.UNDECIDED,Square.UNDECIDED,Square.WHITE,Square.UNDECIDED,Square.UNDECIDED})).calculatePossibilities());
 	}
+	
+	@Test
+	public void testCalculatePossibilitiesComplex() {
+		assertEquals(1, (new Line(0,new int[]{1,10,1}, new Square[]{Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.BLACK,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED})).calculatePossibilities());
+		assertEquals(0, (new Line(0,new int[]{1,10,1}, new Square[]{Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.BLACK,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.WHITE})).calculatePossibilities());
+		}
 
 	
 }

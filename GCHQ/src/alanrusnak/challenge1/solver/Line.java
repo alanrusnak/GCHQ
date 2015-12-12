@@ -80,7 +80,7 @@ public class Line implements Comparable<Line> {
 		if (squaresUsed + blockLength < squares.length
 				&& squares[squaresUsed + blockLength] == Square.BLACK)
 			return false;
-		for (int i = squaresUsed; i < squaresUsed + blockLength; i++) {
+		for (int i = squaresUsed; i < squaresUsed + blockLength ; i++) {
 			if (squares[i] == Square.WHITE)
 				return false;
 		}
