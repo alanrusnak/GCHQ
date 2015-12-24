@@ -88,17 +88,19 @@ public class Line implements Comparable<Line> {
 	}
 
 	public int getPossibilities() {
-		return possibilities;
+		return calculatePossibilities();
 	}
 
+	
+	//line with fewest possibilities is the smallest
 	@Override
 	public int compareTo(Line line) {
 		int possibilitiesDiff = this.getPossibilities()
 				- line.getPossibilities();
 		if (possibilitiesDiff == 0) {
-			return this.getId() - line.getId();
+			return (int) Math.signum(this.getId() - line.getId());
 		}
-		return possibilitiesDiff;
+		return (int) Math.signum(possibilitiesDiff);
 	}
 
 	public int[] getBlocks() {
@@ -125,4 +127,65 @@ public class Line implements Comparable<Line> {
 		this.possibilities = possibilities;
 	}
 
+	public boolean solveLine() {
+		if(getPossibilities()!=1) return false;
+		int[] blocksPlacement = new int[blocks.length];
+		solveLine(0,0,blocksPlacement);
+		setLineFromBlockIndex(blocksPlacement);
+		return true;
+		
+	}
+	
+	private void setLineFromBlockIndex(int[] blocksIndex) {
+		int squaresUsed = 0;
+		int blocksUsed = 0;
+		while(squaresUsed<squares.length){
+			if(blocksIndex[blocksUsed]==squaresUsed){
+				for(int i = 0;i<blocks[blocksUsed];i++){
+					squares[squaresUsed] = Square.BLACK;
+					squaresUsed++;
+				}
+			}else{
+				squares[squaresUsed] = Square.WHITE;
+			}
+		}
+		
+	}
+
+	public boolean solveLine(int blocksUsed, int squaresUsed, int[] blockPlacement){	
+		if (blocks.length - blocksUsed == 0){
+			if(1==calculateForZero(blocksUsed, squaresUsed)){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}	
+
+		if (squaresUsed < squares.length && squares[squaresUsed] == Square.BLACK) {
+			if (blockCanBeUsedHere(blocks[blocksUsed], squares, squaresUsed)) {
+				blockPlacement[blocksUsed] = squaresUsed;
+				if(solveLine(blocksUsed + 1,squaresUsed + blocks[blocksUsed] + 1,blockPlacement)){
+					return true;				
+			} else {
+				return false;
+			}
+			}
+		} else {
+			if (blockCanBeUsedHere(blocks[blocksUsed], squares, squaresUsed)) {
+				blockPlacement[blocksUsed] = squaresUsed;
+				if(solveLine(blocksUsed + 1,squaresUsed + blocks[blocksUsed] + 1,blockPlacement)){
+					return true;
+			}
+				}
+			if (squaresUsed < squares.length) {
+				if(solveLine(blocksUsed,squaresUsed + 1,blockPlacement)){
+					return true;
+					}
+			}
+		
+
+	}
+		return false;
+	}
 }
