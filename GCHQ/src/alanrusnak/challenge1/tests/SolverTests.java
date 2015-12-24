@@ -56,5 +56,21 @@ public class SolverTests {
 		assertEquals(0, (new Line(0,new int[]{1,10,1}, new Square[]{Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.BLACK,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED,Square.WHITE})).calculatePossibilities());
 		}
 
+	@Test
+	public void testCompareLines() {
+		Line line0 = new Line(0,new int[]{1}, new Square[]{Square.UNDECIDED,Square.BLACK,Square.UNDECIDED});
+		Line line1 = new Line(0,new int[]{1}, new Square[]{Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED});
+		Line line2 = new Line(0,new int[]{2}, new Square[]{Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED});
+		Line line3 = new Line(0,new int[]{3}, new Square[]{Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED});
+		Line line4 = new Line(1,new int[]{3}, new Square[]{Square.UNDECIDED,Square.UNDECIDED,Square.UNDECIDED});
+		
+		assertEquals(-1,line0.compareTo(line1));
+		assertEquals(1,line1.compareTo(line2));
+		assertEquals(1,line2.compareTo(line3));
+		assertEquals(0,line0.compareTo(line3));
+		assertEquals(-1,line0.compareTo(line4));
+		
+		
+		}
 	
 }
