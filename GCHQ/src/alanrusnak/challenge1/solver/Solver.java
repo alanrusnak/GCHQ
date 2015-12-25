@@ -4,8 +4,7 @@ import java.util.TreeSet;
 
 public class Solver {
 
-	private TreeSet<Line> queue;
-	
+	private TreeSet<Line> queue;	
 	
 	
 	public boolean solve(Board board){
@@ -27,10 +26,25 @@ public class Solver {
 				next.solveLine();
 			}else{
 				//Recalculate possibilities for all and see if anything has changed
+				boolean flag = false;
+				for(Line l : queue){
+					if(1==l.calculatePossibilities()){
+						flag = true;
+					}
+				}
+				if(flag){
+					continue;
+				}
+				
 				//if not then need to search!
+				System.out.println("Search needed???");
+				return false;
+				
 			}
 			
 		}
+		
+		return true;
 		
 		
 	}

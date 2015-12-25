@@ -7,12 +7,30 @@ public class Line implements Comparable<Line> {
 	private Square[] squares;
 	private int possibilities;
 
+	
+	
+	
+	public void setSquares(Square[] squares) {
+		this.squares = squares;
+	}
+
+
+
 	public Line(int id, int[] blocks, Square[] squares) {
 		super();
 		this.id = id;
 		this.blocks = blocks;
 		this.squares = squares;
 	}
+
+	
+
+	public Line(int id, int[] blocks) {
+		this.id = id;
+		this.blocks = blocks;
+	}
+
+
 
 	public int calculatePossibilities() {
 		return calculatePossibilities(0, 0);
@@ -25,7 +43,7 @@ public class Line implements Comparable<Line> {
 		int ifBlockUsed = 0;
 		int ifBlockNotUsed = 0;
 
-		if (squaresUsed < squares.length && squares[squaresUsed] == Square.BLACK) {
+		if (squaresUsed < squares.length && squares[squaresUsed].getState() == SquareState.BLACK) {
 			if (blockCanBeUsedHere(blocks[blocksUsed], squares, squaresUsed)) {
 				ifBlockUsed = calculatePossibilities(blocksUsed + 1,
 						squaresUsed + blocks[blocksUsed] + 1);
@@ -50,7 +68,7 @@ public class Line implements Comparable<Line> {
 	private int calculateForZero(int blocksUsed, int squaresUsed) {
 		if (squaresUsed < squares.length) {
 			for (int i = squaresUsed; i < squares.length; i++) {
-				if (squares[i] == Square.BLACK)
+				if (squares[i].getState() == SquareState.BLACK)
 					return 0;
 			}
 			return 1;
@@ -58,7 +76,7 @@ public class Line implements Comparable<Line> {
 		return 1;
 	}
 
-	private boolean isNoSquaresLeft(Square[] squares, int squaresUsed) {
+	private boolean isNoSquaresLeft(SquareState[] squares, int squaresUsed) {
 		return squares.length - squaresUsed == 0;
 	}
 
@@ -78,10 +96,10 @@ public class Line implements Comparable<Line> {
 		if (possibleSquaresLeft(squares, squaresUsed) < blockLength)
 			return false;
 		if (squaresUsed + blockLength < squares.length
-				&& squares[squaresUsed + blockLength] == Square.BLACK)
+				&& squares[squaresUsed + blockLength].getState() == SquareState.BLACK)
 			return false;
 		for (int i = squaresUsed; i < squaresUsed + blockLength ; i++) {
-			if (squares[i] == Square.WHITE)
+			if (squares[i].getState() == SquareState.WHITE)
 				return false;
 		}
 		return true;
@@ -142,11 +160,11 @@ public class Line implements Comparable<Line> {
 		while(squaresUsed<squares.length){
 			if(blocksIndex[blocksUsed]==squaresUsed){
 				for(int i = 0;i<blocks[blocksUsed];i++){
-					squares[squaresUsed] = Square.BLACK;
+					squares[squaresUsed].setState(SquareState.BLACK);
 					squaresUsed++;
 				}
 			}else{
-				squares[squaresUsed] = Square.WHITE;
+				squares[squaresUsed].setState(SquareState.WHITE);
 			}
 		}
 		
@@ -162,7 +180,7 @@ public class Line implements Comparable<Line> {
 			}
 		}	
 
-		if (squaresUsed < squares.length && squares[squaresUsed] == Square.BLACK) {
+		if (squaresUsed < squares.length && squares[squaresUsed].getState() == SquareState.BLACK) {
 			if (blockCanBeUsedHere(blocks[blocksUsed], squares, squaresUsed)) {
 				blockPlacement[blocksUsed] = squaresUsed;
 				if(solveLine(blocksUsed + 1,squaresUsed + blocks[blocksUsed] + 1,blockPlacement)){
