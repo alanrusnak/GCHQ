@@ -30,7 +30,7 @@ public class Loader {
 			Square[][] squares = loadSquares(filename,height,width);
 			setLineSquares(horizontal,vertical,squares);
 			
-			board = new Board(width, height, horizontal, vertical);
+			board = new Board(width, height, horizontal, vertical,squares);
 		} catch (FileNotFoundException e) {			
 			e.printStackTrace();
 		}catch(IOException e){

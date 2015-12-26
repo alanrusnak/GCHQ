@@ -18,6 +18,8 @@ public class LoaderTests {
 		assertEquals(25,board.getHeight());
 		assertEquals(7,board.getHorizontalLines()[0].getBlocks()[4]);
 		assertEquals(7,board.getVerticalLines()[0].getBlocks()[4]);
+		assertEquals(25,board.getVerticalLines()[0].getSquares().length);
+		assertEquals(25,board.getSquares()[0].length);
 		assertEquals(SquareState.BLACK,board.getHorizontalLines()[3].getSquares()[3].getState());
 		assertEquals(SquareState.UNDECIDED,board.getHorizontalLines()[3].getSquares()[2].getState());
 		
