@@ -86,7 +86,7 @@ public class Loader {
 	    
 		for(int id = width;id<width+width;id++){
 			line = reader.readLine();
-			vertical[id] = new Line(id, StringArrToIntArr(line.split(",")));
+			vertical[id-width] = new Line(id, StringArrToIntArr(line.split(",")));
 	        	
 		}
 		
@@ -117,11 +117,13 @@ public class Loader {
 	
 	public void setLineSquares(Line[] horizontal, Line[] vertical, Square[][] squares){
 		for(int i = 0;i<horizontal.length;i++){
-			for(int j=0;j<vertical.length;j++){
+			horizontal[i].setSquares(new Square[vertical.length]);
+			for(int j = 0;j<vertical.length;j++){
 				horizontal[i].getSquares()[j] = squares[i][j];
 			}
 		}
 		for(int i = 0;i<vertical.length;i++){
+			vertical[i].setSquares(new Square[horizontal.length]);
 			for(int j=0;j<horizontal.length;j++){
 				vertical[i].getSquares()[j] = squares[j][i];
 			}
