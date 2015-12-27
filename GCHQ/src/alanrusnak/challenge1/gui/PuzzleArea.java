@@ -40,7 +40,7 @@ public class PuzzleArea extends JPanel{
         			break;
         		case WHITE:
         			g.setColor(Color.WHITE);
-        			//g.fillRect(51+j*20,549-i*20,69+j*20,529-i*20);
+        			g.fillRect(50+j*20,50+i*20,20,20);
         			break;
         			
         		}

@@ -33,7 +33,7 @@ public class Line implements Comparable<Line> {
 
 
 	public int calculatePossibilities() {
-		return calculatePossibilities(0, 0);
+		return possibilities = calculatePossibilities(0, 0);
 	}
 
 	private int calculatePossibilities(int blocksUsed, int squaresUsed) {
@@ -43,6 +43,13 @@ public class Line implements Comparable<Line> {
 		int ifBlockUsed = 0;
 		int ifBlockNotUsed = 0;
 
+//		if (squaresUsed < squares.length && squares[squaresUsed].getState() == SquareState.WHITE) {
+//			if (squaresUsed < squares.length) {
+//				ifBlockNotUsed = calculatePossibilities(blocksUsed,
+//						squaresUsed + 1);
+//			}
+//		}
+		//else if
 		if (squaresUsed < squares.length && squares[squaresUsed].getState() == SquareState.BLACK) {
 			if (blockCanBeUsedHere(blocks[blocksUsed], squares, squaresUsed)) {
 				ifBlockUsed = calculatePossibilities(blocksUsed + 1,
@@ -66,8 +73,10 @@ public class Line implements Comparable<Line> {
 	}
 
 	private int calculateForZero(int blocksUsed, int squaresUsed) {
+		//System.out.println("Enter calculate for zero!");
 		if (squaresUsed < squares.length) {
 			for (int i = squaresUsed; i < squares.length; i++) {
+				//System.out.println("In calculate for zero loop, squaresUsed: " + squaresUsed + ", i: " + i + ", squares.length: " + squares.length);
 				if (squares[i].getState() == SquareState.BLACK)
 					return 0;
 			}
@@ -109,6 +118,25 @@ public class Line implements Comparable<Line> {
 		return calculatePossibilities();
 	}
 
+	@Override
+	public String toString(){
+		return "Line " + id + ": possibilities " + getPossibilities() + ", blocks: " + blocksToString() +  " squares: " + squaresToString();
+	}
+	public String blocksToString(){
+		String string = "";
+		for(int b:blocks){
+			string = string + b + ",";
+		}
+		return string;
+	}
+	public String squaresToString(){
+		String string = "";
+		for(Square s:squares){
+			string = string + s + ",";
+		}
+		return string;
+	}
+	
 	
 	//line with fewest possibilities is the smallest
 	@Override
@@ -160,30 +188,36 @@ public class Line implements Comparable<Line> {
 		while(squaresUsed<squares.length){
 			if(blocksIndex[blocksUsed]==squaresUsed){
 				for(int i = 0;i<blocks[blocksUsed];i++){
-					squares[squaresUsed].setState(SquareState.BLACK);
-					squaresUsed++;
+					squares[squaresUsed++].setState(SquareState.BLACK);
 				}
+				blocksUsed++;
 			}else{
-				squares[squaresUsed].setState(SquareState.WHITE);
+				squares[squaresUsed++].setState(SquareState.WHITE);
 			}
 		}
 		
 	}
 
-	public boolean solveLine(int blocksUsed, int squaresUsed, int[] blockPlacement){	
+	public boolean solveLine(int blocksUsed, int squaresUsed, int[] blockPlacement){
+		System.out.println("solveLine: Line id: " + id + ", Blocks.length= " + blocks.length + ", blocksUsed: " + blocksUsed + ", squaresused: " + squaresUsed + ", squares.length: " + squares.length);
 		if (blocks.length - blocksUsed == 0){
+			
 			if(1==calculateForZero(blocksUsed, squaresUsed)){
+				
 				return true;
 			}
 			else{
+				
 				return false;
 			}
 		}	
 
+		
 		if (squaresUsed < squares.length && squares[squaresUsed].getState() == SquareState.BLACK) {
 			if (blockCanBeUsedHere(blocks[blocksUsed], squares, squaresUsed)) {
 				blockPlacement[blocksUsed] = squaresUsed;
 				if(solveLine(blocksUsed + 1,squaresUsed + blocks[blocksUsed] + 1,blockPlacement)){
+					
 					return true;				
 			} else {
 				return false;
@@ -193,11 +227,13 @@ public class Line implements Comparable<Line> {
 			if (blockCanBeUsedHere(blocks[blocksUsed], squares, squaresUsed)) {
 				blockPlacement[blocksUsed] = squaresUsed;
 				if(solveLine(blocksUsed + 1,squaresUsed + blocks[blocksUsed] + 1,blockPlacement)){
+					
 					return true;
 			}
 				}
 			if (squaresUsed < squares.length) {
 				if(solveLine(blocksUsed,squaresUsed + 1,blockPlacement)){
+					System.out.println("Hello");
 					return true;
 					}
 			}

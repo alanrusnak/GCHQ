@@ -19,6 +19,10 @@ public class Square {
 		this.state = state;
 	}
 	
+	public String toString(){
+		return state.toString();
+	}
+	
 	
 	
 }
