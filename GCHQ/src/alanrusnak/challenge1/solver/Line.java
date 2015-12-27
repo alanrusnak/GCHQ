@@ -1,5 +1,12 @@
 package alanrusnak.challenge1.solver;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 public class Line implements Comparable<Line> {
 
 	private final int id;
@@ -174,6 +181,7 @@ public class Line implements Comparable<Line> {
 	}
 
 	public boolean solveLine() {
+		System.out.println("solveLine: Line id: " + id + ", Blocks.length= " + blocks.length);
 		if(getPossibilities()!=1) return false;
 		int[] blocksPlacement = new int[blocks.length];
 		solveLine(0,0,blocksPlacement);
@@ -199,15 +207,11 @@ public class Line implements Comparable<Line> {
 	}
 
 	public boolean solveLine(int blocksUsed, int squaresUsed, int[] blockPlacement){
-		System.out.println("solveLine: Line id: " + id + ", Blocks.length= " + blocks.length + ", blocksUsed: " + blocksUsed + ", squaresused: " + squaresUsed + ", squares.length: " + squares.length);
 		if (blocks.length - blocksUsed == 0){
-			
 			if(1==calculateForZero(blocksUsed, squaresUsed)){
-				
 				return true;
 			}
 			else{
-				
 				return false;
 			}
 		}	
@@ -233,7 +237,7 @@ public class Line implements Comparable<Line> {
 				}
 			if (squaresUsed < squares.length) {
 				if(solveLine(blocksUsed,squaresUsed + 1,blockPlacement)){
-					System.out.println("Hello");
+					
 					return true;
 					}
 			}
@@ -241,5 +245,171 @@ public class Line implements Comparable<Line> {
 
 	}
 		return false;
+	}
+	
+	private void printArray(int[] x){
+		for(int i : x){
+			System.out.print(i + ",");			
+		}
+		System.out.println();
+	}
+	private void printArray(boolean[] x){
+		for(boolean i : x){
+			System.out.print(i + ",");			
+		}
+		System.out.println();
+	}
+	
+	private void setPartialSolution(int[] blocksIndex, boolean[] mask) {
+		int blocksUsed = 0;
+		
+		printArray(blocksIndex);
+		printArray(mask);
+		
+		
+		for(int i = 0;i<blocksIndex.length;i++){
+			if(!mask[i]){
+				if(blocksIndex[i]!=0) {
+					System.out.println("Setting to white: " + (blocksIndex[i]-1));
+					squares[blocksIndex[i]-1].setState(SquareState.WHITE);
+				}
+				
+				for(int j = blocksIndex[i];j<blocks[blocksUsed]+blocksIndex[i];j++){
+					System.out.println("Setting to black: " + j);
+					squares[j].setState(SquareState.BLACK);
+				}				
+				if(blocksIndex[i]+blocks[blocksUsed]!=squares.length) {
+					System.out.println("Setting to white: " + (blocksIndex[i]+blocks[blocksUsed]));
+					squares[blocksIndex[i]+blocks[blocksUsed]].setState(SquareState.WHITE);
+				}
+				blocksUsed++;
+			}
+			else{
+				blocksUsed++;
+			}
+		}
+		
+		System.out.println(this);
+		
+	}
+	
+	public void partialSolveLine(){
+		int[][] allSolutions = new int[possibilities][blocks.length];
+		for(int i = 0;i<possibilities;i++){
+			allSolutions[i] = new int[]{-1};
+		}
+		int[] blockPlacement = new int[blocks.length];
+		getAllSolutions(0,0,blockPlacement,allSolutions);
+		int[] intersection = getIntersection(allSolutions);
+		boolean[] mask = getMask(allSolutions, intersection);
+		setPartialSolution(allSolutions[0],mask);
+				
+	}
+	
+	private boolean[] getMask(int[][] allSolutions, int[] intersection) {
+		System.out.print("Interesection "); printArray(intersection);
+		
+		int[] solution = allSolutions[0];
+		System.out.print("solution "); printArray(solution);
+		boolean[] mask = new boolean[solution.length];
+		
+		int interIndex = 0;
+		
+		for(int i = 0;i<solution.length;i++){
+			if(solution[i]==intersection[interIndex]){
+				interIndex++;
+			}else{
+				mask[i] = true;				
+			}
+		}
+		
+		return mask;
+	}
+
+
+
+	private int[] deepCopy(int[] x){
+		if(x==null) return null;
+		int[] y = new int[x.length];
+		for(int i = 0;i<y.length;i++){
+			y[i] = x[i];
+		}
+		return y;
+	}
+	
+	private void addToTail(int[] x, int[][] y){
+		for(int i = 0;i<y.length;i++){
+			if(y[i][0]==-1){
+				y[i] = x;
+				return;
+			}
+		}
+		
+	}
+	
+	private int[] getIntersection(int[][] allSolutions){
+		printArray(allSolutions[0]);
+		printArray(allSolutions[1]);
+		
+		Set<Integer> s1 = new TreeSet<Integer>(toList(allSolutions[0]));
+		for(int i = 1;i<allSolutions.length;i++){
+			Set<Integer> s2 = new TreeSet<Integer>(toList(allSolutions[i]));
+			s1.retainAll(s2);
+		}
+		
+
+		return toArray(s1);
+		
+	}
+	
+	private List<Integer> toList(int[] x){
+		List<Integer> intList = new ArrayList<Integer>();
+	    for (int index = 0; index < x.length; index++)
+	    {
+	        intList.add(x[index]);
+	    }
+	    return intList;
+	}
+	
+	private int[] toArray(Set<Integer> set){
+		int[] arr = new int[set.size()];
+		int index = 0;
+		for(Integer x : set){
+			arr[index++] = x.intValue();
+		}
+		return arr;
+	}
+	
+	public void getAllSolutions(int blocksUsed, int squaresUsed, int[] blockPlacement, int[][] allSolutions){
+		if (blocks.length - blocksUsed == 0){
+			if(1==calculateForZero(blocksUsed, squaresUsed)){
+				addToTail(blockPlacement,allSolutions);
+				return;
+			}
+			
+		}	
+
+		
+		if (squaresUsed < squares.length && squares[squaresUsed].getState() == SquareState.BLACK) {
+			if (blockCanBeUsedHere(blocks[blocksUsed], squares, squaresUsed)) {
+				blockPlacement[blocksUsed] = squaresUsed;
+				getAllSolutions(blocksUsed + 1,squaresUsed + blocks[blocksUsed] + 1,deepCopy(blockPlacement),allSolutions);		
+			}
+		} else {
+			if (squaresUsed < squares.length) {
+				getAllSolutions(blocksUsed,squaresUsed + 1,deepCopy(blockPlacement),allSolutions);					
+			}
+			if (blockCanBeUsedHere(blocks[blocksUsed], squares, squaresUsed)) {
+				blockPlacement[blocksUsed] = squaresUsed;
+				getAllSolutions(blocksUsed + 1,squaresUsed + blocks[blocksUsed] + 1,deepCopy(blockPlacement),allSolutions);
+				}
+			
+
+	}
+		return;
+	}
+	
+	public static void main(String[] args){
+		
 	}
 }
