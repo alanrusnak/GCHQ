@@ -263,10 +263,6 @@ public class Line implements Comparable<Line> {
 	private void setPartialSolution(int[] blocksIndex, boolean[] mask) {
 		int blocksUsed = 0;
 		
-		printArray(blocksIndex);
-		printArray(mask);
-		
-		
 		for(int i = 0;i<blocksIndex.length;i++){
 			if(!mask[i]){
 				if(blocksIndex[i]!=0) {
@@ -294,6 +290,10 @@ public class Line implements Comparable<Line> {
 	}
 	
 	public void partialSolveLine(){
+		if(this.getPossibilities()==1){
+			this.solveLine();
+			return;
+		}
 		int[][] allSolutions = new int[possibilities][blocks.length];
 		for(int i = 0;i<possibilities;i++){
 			allSolutions[i] = new int[]{-1};
@@ -312,7 +312,7 @@ public class Line implements Comparable<Line> {
 	
 	private boolean[] getMask(int[][] allSolutions, int[] intersection) {
 		
-		int[] solution = allSolutions[0];
+		int[] solution = allSolutions[1];
 		
 		boolean[] mask = new boolean[solution.length];
 		
@@ -400,25 +400,26 @@ public class Line implements Comparable<Line> {
 
 	private int[] getIntersection(int[][] allSolutions){
 		
-		printArray(allSolutions[0]);
-				
-		TreeSet<Integer> s1 = new TreeSet<Integer>(toList(allSolutions[0]));
-		for(int i = 1;i<allSolutions.length;i++){
-			TreeSet<Integer> s2 = new TreeSet<Integer>(toList(allSolutions[i]));
-			s1.retainAll(s2);
+		Set<Integer> intersection = new TreeSet<Integer>();
+		boolean addToIntersection = true;
+		for(int i = 0;i<allSolutions[0].length;i++){
+			addToIntersection = true;
+			int index = allSolutions[0][i];
+			for(int j = 1;j<allSolutions.length;j++){
+				if(index!=allSolutions[j][i]){
+					addToIntersection = false;
+				}
+			}
+			if(addToIntersection){
+				intersection.add(index);
+			}
+			
 		}
 		
-		s1.remove(-1);
-		if(!s1.isEmpty() && indexOf(allSolutions[0],s1.first()) != indexOf(allSolutions[allSolutions.length-1],(s1.first()))){
-			//s1.remove(s1.first());
-			s1.clear();
-		}
-		if(!s1.isEmpty() && indexOf(allSolutions[0],s1.last()) != indexOf(allSolutions[allSolutions.length-1],(s1.last()))){
-			//s1.remove(s1.last());
-			s1.clear();
-		}
 		
-		return toArray(s1);
+		intersection.remove(-1);
+		
+		return toArray(intersection);
 		
 	}
 	

@@ -39,11 +39,11 @@ public class Solver {
 			if(runPartial){
 				solvePartialLines(queue);
 				partialRuns++;
-				if(partialRuns==100){
-					findMoreWhiteSquares(queue);
+				if(partialRuns==20){
+					//findMoreWhiteSquares(queue);
 					//return false;
 				}
-				if(partialRuns==102){
+				if(partialRuns==30){
 					return false;
 				}
 				
@@ -63,6 +63,7 @@ public class Solver {
 				Line next = it.next();
 				System.out.println("Partial solve: "+ next);
 				next.partialSolveLine();
+				System.out.println("After solve: "+ next);
 			}
 				
 		
@@ -90,6 +91,9 @@ public class Solver {
 					Line next = queue.pollFirst();
 					System.out.println("Full solve: "+ next);
 					next.solveLine();
+					if(queue.isEmpty()){
+						return true;
+					}
 				}else{
 					return true;
 				}

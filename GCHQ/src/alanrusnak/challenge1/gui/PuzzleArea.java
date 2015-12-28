@@ -23,7 +23,7 @@ public class PuzzleArea extends JPanel{
         super.paintComponent(g);    
         Square[][] squares = board.getSquares();
         g.setColor(Color.WHITE);
-        g.fillRect(0,0,600,600);        
+        g.fillRect(0,0,601,601);        
         g.setColor(Color.BLACK);
         
         
