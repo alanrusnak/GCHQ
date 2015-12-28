@@ -12,7 +12,7 @@ public class Solver {
 	
 	public boolean solve(Board board){
 		queue = new TreeSet<Line>();
-		int partialRuns = 0;
+		
 		Line[] horizontal = board.getHorizontalLines();
 		Line[] vertical = board.getVerticalLines();
 		
@@ -38,27 +38,18 @@ public class Solver {
 			boolean runPartial = !notRunPartial;
 			if(runPartial){
 				solvePartialLines(queue);
-				partialRuns++;
-				if(partialRuns==20){
-					//findMoreWhiteSquares(queue);
-					//return false;
-				}
-				if(partialRuns==30){
-					return false;
-				}
-				
 			}
-			
-		
 				
-	}
+		}
+				
+	
 		return true;
 	}
 	
 	private void solvePartialLines(TreeSet<Line> queue) {
 		System.out.println("Partial solver running. Lines: " + queue.size());
 			Iterator<Line> it = queue.iterator();
-			//for(int i = 0;i<30;i++){
+			
 			while(it.hasNext()){
 				Line next = it.next();
 				System.out.println("Partial solve: "+ next);
@@ -69,23 +60,13 @@ public class Solver {
 		
 	}
 	
-	private void findMoreWhiteSquares(TreeSet<Line> queue) {
-		Iterator<Line> it = queue.iterator();
-		//for(int i = 0;i<30;i++){
-		while(it.hasNext()){
-			Line next = it.next();
-			next.findMoreWhiteSquares();
-		}
-			
-	
-}
+
 
 	private boolean solveFullLines(TreeSet<Line> queue){
 		System.out.println("Full solver running. Lines: " + queue.size());
 		if(queue.first().getPossibilities()==1){	
 			Iterator<Line> it = queue.iterator();
-			
-			//for(int i = 0;i<30;i++){
+						
 			while(it.hasNext()){
 				if(queue.first().getPossibilities()==1){
 					Line next = queue.pollFirst();
@@ -105,8 +86,7 @@ public class Solver {
 	
 	public static void main(String[] args){
 		Solver solver = new Solver();
-		Board board = (new Loader()).loadBoard("board.txt");
-		
+		Board board = (new Loader()).loadBoard("board.txt");		
 		System.out.println("Solved: " + solver.solve(board));
 	}
 	

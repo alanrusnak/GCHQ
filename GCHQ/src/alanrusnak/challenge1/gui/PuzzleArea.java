@@ -1,11 +1,13 @@
 package alanrusnak.challenge1.gui;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+
+import javax.swing.JPanel;
 
 import alanrusnak.challenge1.solver.Board;
 import alanrusnak.challenge1.solver.Square;
-import alanrusnak.challenge1.solver.SquareState;
 
 public class PuzzleArea extends JPanel{
 
