@@ -1,14 +1,25 @@
 package alanrusnak.challenge1.gui;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+
 import javax.swing.*;
 
 import alanrusnak.challenge1.loader.Loader;
 import alanrusnak.challenge1.solver.Board;
+import alanrusnak.challenge1.solver.Solver;
 
 public class GUI {
 
+	private PuzzleArea puzzleArea;
+	private Solver solver;
+	private Board board;
+	
 	public void createGUI(String filename){
+		solver= new Solver();
+		board = (new Loader()).loadBoard("board.txt");
+		
+		
 		JFrame frame = new JFrame();
 		frame.setTitle("GCHQ Challenge 1 - Alan Rusnak");
 		frame.setSize(700,700);
@@ -19,7 +30,7 @@ public class GUI {
 		JPanel sideBar = getSideBar();
 		
 		
-		PuzzleArea puzzleArea = new PuzzleArea(initializeBoard(filename));
+		puzzleArea = new PuzzleArea(board);
 		
 		
 		panel.add(puzzleArea,BorderLayout.CENTER);
@@ -35,7 +46,13 @@ public class GUI {
 	
 	public JPanel getSideBar(){
 		JPanel sideBar = new JPanel();
-		JButton solveButton = new JButton("Solve");
+		JButton solveButton = new JButton(new AbstractAction("Solve") {
+		    public void actionPerformed(ActionEvent e) {
+		    	solver.solve(board);
+		    	puzzleArea.repaint();
+		    }
+			
+		});
 		sideBar.add(solveButton);
 		return sideBar;
 	}

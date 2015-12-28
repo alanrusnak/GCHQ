@@ -2,6 +2,7 @@ package alanrusnak.challenge1.tests;
 
 import static org.junit.Assert.*;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import alanrusnak.challenge1.solver.Line;
@@ -55,6 +56,9 @@ public class SolverTests {
 	public void testCalculatePossibilitiesComplex() {
 		assertEquals(1, (new Line(0,new int[]{1,10,1}, new Square[]{new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.BLACK),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED)})).calculatePossibilities());
 		assertEquals(0, (new Line(0,new int[]{1,10,1}, new Square[]{new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.BLACK),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.WHITE)})).calculatePossibilities());
+		
+		Line l1 = new Line(0,new int[]{7,2,1,1,7}, new Square[]{new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.BLACK),new Square(SquareState.BLACK),new Square(SquareState.UNDECIDED),new Square(SquareState.BLACK),new Square(SquareState.UNDECIDED),new Square(SquareState.BLACK),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.WHITE),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.BLACK),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED)});
+		assertTrue(6<l1.calculatePossibilities());
 		}
 
 	@Test
@@ -73,5 +77,15 @@ public class SolverTests {
 		
 		
 		}
+	
+//	@Test
+//	public void testGetAllSolutions() {
+//		Line l1 = (new Line(0,new int[]{1}, new Square[]{new Square(SquareState.UNDECIDED),new Square(SquareState.UNDECIDED)}));
+//		l1.calculatePossibilities();
+//		Assert.assertArrayEquals(new int[][]{new int[]{1}, new int[]{0}},l1.getAllSolutions() );
+//		
+//		
+//		}
+	
 	
 }

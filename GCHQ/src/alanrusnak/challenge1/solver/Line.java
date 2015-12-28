@@ -58,14 +58,14 @@ public class Line implements Comparable<Line> {
 //		}
 		//else if
 		if (squaresUsed < squares.length && squares[squaresUsed].getState() == SquareState.BLACK) {
-			if (blockCanBeUsedHere(blocks[blocksUsed], squares, squaresUsed)) {
+			if (blocksUsed<blocks.length && blockCanBeUsedHere(blocks[blocksUsed], squares, squaresUsed)) {
 				ifBlockUsed = calculatePossibilities(blocksUsed + 1,
 						squaresUsed + blocks[blocksUsed] + 1);
 			} else {
 				return 0;
 			}
 		} else {
-			if (blockCanBeUsedHere(blocks[blocksUsed], squares, squaresUsed)) {
+			if (blocksUsed<blocks.length && blockCanBeUsedHere(blocks[blocksUsed], squares, squaresUsed)) {
 				ifBlockUsed = calculatePossibilities(blocksUsed + 1,
 						squaresUsed + blocks[blocksUsed] + 1);
 			}
@@ -194,7 +194,7 @@ public class Line implements Comparable<Line> {
 		int squaresUsed = 0;
 		int blocksUsed = 0;
 		while(squaresUsed<squares.length){
-			if(blocksIndex[blocksUsed]==squaresUsed){
+			if(blocksUsed<blocks.length && blocksIndex[blocksUsed]==squaresUsed){
 				for(int i = 0;i<blocks[blocksUsed];i++){
 					squares[squaresUsed++].setState(SquareState.BLACK);
 				}
@@ -270,16 +270,16 @@ public class Line implements Comparable<Line> {
 		for(int i = 0;i<blocksIndex.length;i++){
 			if(!mask[i]){
 				if(blocksIndex[i]!=0) {
-					System.out.println("Setting to white: " + (blocksIndex[i]-1));
+					
 					squares[blocksIndex[i]-1].setState(SquareState.WHITE);
 				}
 				
 				for(int j = blocksIndex[i];j<blocks[blocksUsed]+blocksIndex[i];j++){
-					System.out.println("Setting to black: " + j);
+					
 					squares[j].setState(SquareState.BLACK);
 				}				
 				if(blocksIndex[i]+blocks[blocksUsed]!=squares.length) {
-					System.out.println("Setting to white: " + (blocksIndex[i]+blocks[blocksUsed]));
+					
 					squares[blocksIndex[i]+blocks[blocksUsed]].setState(SquareState.WHITE);
 				}
 				blocksUsed++;
@@ -300,23 +300,26 @@ public class Line implements Comparable<Line> {
 		}
 		int[] blockPlacement = new int[blocks.length];
 		getAllSolutions(0,0,blockPlacement,allSolutions);
+		
 		int[] intersection = getIntersection(allSolutions);
-		boolean[] mask = getMask(allSolutions, intersection);
-		setPartialSolution(allSolutions[0],mask);
+		if(intersection.length>0){
+			boolean[] mask = getMask(allSolutions, intersection);
+			setPartialSolution(allSolutions[0],mask);
+		}
+		
 				
 	}
 	
 	private boolean[] getMask(int[][] allSolutions, int[] intersection) {
-		System.out.print("Interesection "); printArray(intersection);
 		
 		int[] solution = allSolutions[0];
-		System.out.print("solution "); printArray(solution);
+		
 		boolean[] mask = new boolean[solution.length];
 		
 		int interIndex = 0;
 		
 		for(int i = 0;i<solution.length;i++){
-			if(solution[i]==intersection[interIndex]){
+			if(interIndex<intersection.length&& solution[i]==intersection[interIndex]){
 				interIndex++;
 			}else{
 				mask[i] = true;				
@@ -347,19 +350,83 @@ public class Line implements Comparable<Line> {
 		
 	}
 	
-	private int[] getIntersection(int[][] allSolutions){
-		printArray(allSolutions[0]);
-		printArray(allSolutions[1]);
+	public boolean findMoreWhiteSquares(){
+		int minBlockSize = getMinimumBlockSize();
+		if(minBlockSize>2){
+			return whiteIfBlockDoesNotFit(minBlockSize);			 
+		}
+		return false;
+	}
+	
+	
+	
+	private boolean whiteIfBlockDoesNotFit(int minBlockSize) {
+		if(id==7){
 		
-		Set<Integer> s1 = new TreeSet<Integer>(toList(allSolutions[0]));
+		int count = 0;
+		for(int i = 0;i<squares.length-minBlockSize;i++){
+			if(squares[i].getState()==SquareState.UNDECIDED){
+				count++;
+			}
+			else if(squares[i].getState()==SquareState.WHITE){
+				if(count<minBlockSize){
+					for(int j = i;j>=i-count;j--){
+						squares[j].setState(SquareState.WHITE);
+					}
+					count = 0;
+				}
+			}
+			else{
+				
+			}
+		}
+		
+		}
+		return true;
+		
+	}
+
+
+
+	private int getMinimumBlockSize() {
+		int min = 10000;
+		for(int i = 0;i<blocks.length;i++){
+			min = Math.min(min, blocks[i]);
+		}
+		return min;
+	}
+
+
+
+	private int[] getIntersection(int[][] allSolutions){
+		
+		printArray(allSolutions[0]);
+				
+		TreeSet<Integer> s1 = new TreeSet<Integer>(toList(allSolutions[0]));
 		for(int i = 1;i<allSolutions.length;i++){
-			Set<Integer> s2 = new TreeSet<Integer>(toList(allSolutions[i]));
+			TreeSet<Integer> s2 = new TreeSet<Integer>(toList(allSolutions[i]));
 			s1.retainAll(s2);
 		}
 		
-
+		s1.remove(-1);
+		if(!s1.isEmpty() && indexOf(allSolutions[0],s1.first()) != indexOf(allSolutions[allSolutions.length-1],(s1.first()))){
+			//s1.remove(s1.first());
+			s1.clear();
+		}
+		if(!s1.isEmpty() && indexOf(allSolutions[0],s1.last()) != indexOf(allSolutions[allSolutions.length-1],(s1.last()))){
+			//s1.remove(s1.last());
+			s1.clear();
+		}
+		
 		return toArray(s1);
 		
+	}
+	
+	private int indexOf(int[] arr, int x){
+		for(int i = 0;i<arr.length;i++){
+			if(arr[i]==x) return i;
+		}
+		return -1;
 	}
 	
 	private List<Integer> toList(int[] x){
@@ -391,7 +458,7 @@ public class Line implements Comparable<Line> {
 
 		
 		if (squaresUsed < squares.length && squares[squaresUsed].getState() == SquareState.BLACK) {
-			if (blockCanBeUsedHere(blocks[blocksUsed], squares, squaresUsed)) {
+			if (blocksUsed<blocks.length && blockCanBeUsedHere(blocks[blocksUsed], squares, squaresUsed)) {
 				blockPlacement[blocksUsed] = squaresUsed;
 				getAllSolutions(blocksUsed + 1,squaresUsed + blocks[blocksUsed] + 1,deepCopy(blockPlacement),allSolutions);		
 			}
@@ -399,7 +466,7 @@ public class Line implements Comparable<Line> {
 			if (squaresUsed < squares.length) {
 				getAllSolutions(blocksUsed,squaresUsed + 1,deepCopy(blockPlacement),allSolutions);					
 			}
-			if (blockCanBeUsedHere(blocks[blocksUsed], squares, squaresUsed)) {
+			if (blocksUsed<blocks.length && blockCanBeUsedHere(blocks[blocksUsed], squares, squaresUsed)) {
 				blockPlacement[blocksUsed] = squaresUsed;
 				getAllSolutions(blocksUsed + 1,squaresUsed + blocks[blocksUsed] + 1,deepCopy(blockPlacement),allSolutions);
 				}

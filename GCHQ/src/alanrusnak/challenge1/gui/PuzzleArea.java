@@ -16,7 +16,7 @@ public class PuzzleArea extends JPanel{
 	}
 	
 	public Dimension getPreferredSize() {
-        return new Dimension(600,600);
+        return new Dimension(601,601);
     }
 	
 	protected void paintComponent(Graphics g) {
@@ -32,15 +32,15 @@ public class PuzzleArea extends JPanel{
         		switch (squares[i][j].getState()){
         		case BLACK:
         			g.setColor(Color.BLACK);
-        			g.fillRect(50+j*20,50+i*20,20,20);
+        			g.fillRect(100+j*20,100+i*20,20,20);
         			break;
         		case UNDECIDED:
-        			g.setColor(new Color(230,230,230));
-        			g.fillRect(50+j*20,50+i*20,20,20);
+        			g.setColor(new Color(180,180,180));
+        			g.fillRect(100+j*20,100+i*20,20,20);
         			break;
         		case WHITE:
         			g.setColor(Color.WHITE);
-        			g.fillRect(50+j*20,50+i*20,20,20);
+        			g.fillRect(100+j*20,100+i*20,20,20);
         			break;
         			
         		}
@@ -49,12 +49,23 @@ public class PuzzleArea extends JPanel{
         
         g.setColor(Color.BLACK);
         for(int i = 0;i<squares.length+1;i++){
-        	g.drawLine(50,50+i*20,550,50+i*20);
+        	g.drawLine(100,100+i*20,600,100+i*20);
         }
         for(int i = 0;i<squares[0].length+1;i++){
-        	g.drawLine(50+i*20,50,50+i*20,550);
+        	g.drawLine(100+i*20,100,100+i*20,600);
         }
-        
+        for(int i = 0;i<squares.length;i++){
+        	g.drawString(arrToString(board.getHorizontalLines()[i].getBlocks()), 10, i*20+115);
+        }
     }  
-	
+
+	private String arrToString(int[] x){
+		String a = "";
+		for(int i : x){
+			a = a + i + " ";
+		}
+		return a;
+	}
 }
+
+

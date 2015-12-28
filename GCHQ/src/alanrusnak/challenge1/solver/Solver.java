@@ -1,5 +1,6 @@
 package alanrusnak.challenge1.solver;
 
+import java.util.Iterator;
 import java.util.TreeSet;
 
 import alanrusnak.challenge1.loader.Loader;
@@ -11,7 +12,7 @@ public class Solver {
 	
 	public boolean solve(Board board){
 		queue = new TreeSet<Line>();
-		
+		int partialRuns = 0;
 		Line[] horizontal = board.getHorizontalLines();
 		Line[] vertical = board.getVerticalLines();
 		
@@ -33,39 +34,76 @@ public class Solver {
 			for(Line l : queue){
 				System.out.println(l);
 			}
-			if(queue.first().getPossibilities()==1){				
-				Line next = queue.pollFirst();
-				next.solveLine();				
-			}else{
-//				//Recalculate possibilities for all and see if anything has changed
-//				boolean flag = false;
-//				for(Line l : queue){					
-//					if(1==l.calculatePossibilities()){
-//						flag = true;
-//					}
-//				}
-//				if(flag){
-//					continue;
-//				}
-				
-				//if not then need to search!
-				System.out.println("Search needed???");
-				return false;
+			boolean notRunPartial = solveFullLines(queue);
+			boolean runPartial = !notRunPartial;
+			if(runPartial){
+				solvePartialLines(queue);
+				partialRuns++;
+				if(partialRuns==100){
+					findMoreWhiteSquares(queue);
+					//return false;
+				}
+				if(partialRuns==102){
+					return false;
+				}
 				
 			}
 			
-		}
 		
+				
+	}
 		return true;
+	}
+	
+	private void solvePartialLines(TreeSet<Line> queue) {
+		System.out.println("Partial solver running. Lines: " + queue.size());
+			Iterator<Line> it = queue.iterator();
+			//for(int i = 0;i<30;i++){
+			while(it.hasNext()){
+				Line next = it.next();
+				System.out.println("Partial solve: "+ next);
+				next.partialSolveLine();
+			}
+				
 		
-		
+	}
+	
+	private void findMoreWhiteSquares(TreeSet<Line> queue) {
+		Iterator<Line> it = queue.iterator();
+		//for(int i = 0;i<30;i++){
+		while(it.hasNext()){
+			Line next = it.next();
+			next.findMoreWhiteSquares();
+		}
+			
+	
+}
+
+	private boolean solveFullLines(TreeSet<Line> queue){
+		System.out.println("Full solver running. Lines: " + queue.size());
+		if(queue.first().getPossibilities()==1){	
+			Iterator<Line> it = queue.iterator();
+			
+			//for(int i = 0;i<30;i++){
+			while(it.hasNext()){
+				if(queue.first().getPossibilities()==1){
+					Line next = queue.pollFirst();
+					System.out.println("Full solve: "+ next);
+					next.solveLine();
+				}else{
+					return true;
+				}
+			}
+			return true;			
+		}
+		return false;
 	}
 	
 	public static void main(String[] args){
 		Solver solver = new Solver();
 		Board board = (new Loader()).loadBoard("board.txt");
 		
-		solver.solve(board);
+		System.out.println("Solved: " + solver.solve(board));
 	}
 	
 }
